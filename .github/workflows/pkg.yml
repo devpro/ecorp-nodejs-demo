@@ -1,0 +1,17 @@
+name: PKG
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout git repository
+        uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag ecorp-nodejs-demo:1.0.${{ github.run_id }}
+      - name: Push Docker image
+        run: echo TODO
