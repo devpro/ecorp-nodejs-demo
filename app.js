@@ -1,0 +1,41 @@
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
+const rabbitmq_url = process.env.RABBITMQ_URL || 'amqp://localhost';
+
+app.get('/', (req, res) => {
+  res.json({'message': 'ok'});
+})
+
+app.get('/send', (req, res) => {
+  var amqp = require('amqplib/callback_api');
+
+  amqp.connect(rabbitmq_url, function (error0, connection) {
+    if (error0) {
+      throw error0;
+    }
+
+    connection.createChannel(function (error1, channel) {
+      if (error1) {
+        throw error1;
+      }
+
+      var queue = 'hello';
+      var msg = 'Hello World!';
+
+      channel.assertQueue(queue, {
+        durable: false
+      });
+
+      channel.sendToQueue(queue, Buffer.from(msg));
+
+      console.log(" [x] Sent %s", msg);
+
+      res.json({'message': 'ok'});
+    });
+  });
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
