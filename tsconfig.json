@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "es2020",
+    "allowSyntheticDefaultImports": true
+  },
+  "ts-node": {
+     // Tell ts-node CLI to install the --loader automatically
+     "esm": true
+  },
+  "include": [
+    "**/*"
+  ]
+}

@@ -1,13 +1,50 @@
-# GitHub Codespaces ♥️ Express
+# E Corp Node.js demonstration applications
 
-Welcome to your shiny new Codespace running Express! We've got everything fired up and running for you to explore Express.
+## Local development
 
-You've got a blank canvas to work on from a git perspective as well. There's a single initial commit with the what you're seeing right now - where you go from here is up to you!
+* Runs RabbitMQ in a container and check cluster status
 
-Everything you do here is contained within this one codespace. There is no repository on GitHub yet. If and when you’re ready you can click "Publish Branch" and we’ll create your repository and push up your project. If you were just exploring then and have no further need for this code then you can simply delete your codespace and it's gone forever.
-
-To run this application:
-
+```bash
+docker run --name rabbitmq --rm --detach -p 5672:5672 -p 15672:15672 rabbitmq
+docker exec rabbitmq rabbitmq-diagnostics cluster_status
 ```
+
+* Makes sure RabbitMQ is running ok
+
+```bash
+./samples/send.js
+docker exec rabbitmq rabbitmqctl list_queues
+./samples/receive.js
+```
+
+* Installs dependencies (NPM packages)
+
+```bash
+npm install --dev
+```
+
+* Runs the application (test it with `curl http://localhost:3000/send`)
+
+```bash
 npm start
 ```
+
+* Runs the application in a container (test it with `curl http://localhost:8080/send`)
+
+```bash
+docker build . -t ecorp-nodejs-demo
+docker network create demo
+docker network connect demo rabbitmq
+docker run --name ecorp-nodejs-demo --rm -p 8080:3000 --net=demo -e "RABBITMQ_URL=amqp://rabbitmq:5672" ecorp-nodejs-demo
+```
+
+* Cleans up
+
+```bash
+docker ps stop rabbitmq
+docker network delete demo
+```
+
+## References
+
+* [RabbitMQ Hello World tutorial](https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html)
