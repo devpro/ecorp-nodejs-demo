@@ -26,6 +26,10 @@ app.get('/', (req, res) => {
   res.json({ 'message': 'ok' });
 })
 
+app.get('/healthz', (req, res) => {
+  res.status(202).json({ "status": "running" });
+})
+
 const msg = 'Hello World!';
 app.get('/send', async (req, res) => {
   channel.sendToQueue(
@@ -39,7 +43,7 @@ app.get('/send', async (req, res) => {
     console.log(Buffer.from(data.content).toString());
   });
 
-  res.status(202).json({ "status": "ok" });
+  res.status(202).json({ "status": "message sent" });
 });
 
 const server = app.listen(port, () => {
