@@ -11,8 +11,18 @@ jobs:
     steps:
       - name: Checkout git repository
         uses: actions/checkout@v3
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ecorp-nodejs-demo:1.0.${{ github.run_id }}
-      - name: Push Docker image
+      - name: Build container image
+        run: docker build . --file Dockerfile --tag $CONTAINER_REPOSITORY:$CONTAINER_APP_VERSION
+      - name: Log in container image regitry
+        uses: docker/login-action@v2.1.0
+        with:
+          registry: $CONTAINER_REGISTRY_DOMAIN
+          username: $CONTAINER_REGISTRY_USER
+          password: $CONTAINER_REGISTRY_PASSWD
+      - name: Push container image
         if: github.ref == 'refs/heads/main'
-        run: echo TODO
+        run: docker push $CONTAINER_REPOSITORY:$CONTAINER_APP_VERSION
+    env:
+      # defined in GitHub: CONTAINER_REGISTRY_PASSWD, CONTAINER_REGISTRY_USER, CONTAINER_REGISTRY_DOMAIN, CONTAINER_REGISTRY_FOLDER
+      CONTAINER_REPOSITORY: $CONTAINER_REGISTRY_DOMAIN/$CONTAINER_REGISTRY_FOLDER/ecorp-nodejsdemo-api
+      CONTAINER_APP_VERSION: 1.0.${{ github.run_id }}
