@@ -1,3 +1,6 @@
+# GitHub configuration
+# - Settings > Secrets > Actions > Repository secrets: CONTAINER_REGISTRY_DOMAIN, CONTAINER_REGISTRY_FOLDER, CONTAINER_REGISTRY_PASSWD, CONTAINER_REGISTRY_USER
+
 name: PKG
 
 on:
@@ -11,7 +14,17 @@ jobs:
     steps:
       - name: Checkout git repository
         uses: actions/checkout@v3
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ecorp-nodejs-demo:1.0.${{ github.run_id }}
-      - name: Push Docker image
-        run: echo TODO
+      - name: Build container image
+        run: docker build . --file Dockerfile --tag "$CONTAINER_REPOSITORY:$CONTAINER_APP_VERSION"
+      - name: Login container image registry
+        uses: docker/login-action@v2.1.0
+        with:
+          registry: ${{ secrets.CONTAINER_REGISTRY_DOMAIN }}
+          username: ${{ secrets.CONTAINER_REGISTRY_USER }}
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWD }}
+      - name: Push container image
+        if: github.ref == 'refs/heads/main'
+        run: docker push "$CONTAINER_REPOSITORY:$CONTAINER_APP_VERSION"
+    env:
+      CONTAINER_REPOSITORY: "${{ secrets.CONTAINER_REGISTRY_DOMAIN }}/${{ secrets.CONTAINER_REGISTRY_FOLDER }}/ecorp-nodejsdemo-api"
+      CONTAINER_APP_VERSION: 1.0.${{ github.run_id }}

@@ -1,5 +1,9 @@
 # E Corp Node.js demonstration applications
 
+[![CI](https://github.com/devpro/ecorp-nodejs-demo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/devpro/ecorp-nodejs-demo/actions/workflows/ci.yml)
+[![PKG](https://github.com/devpro/ecorp-nodejs-demo/actions/workflows/pkg.yml/badge.svg?branch=main)](https://github.com/devpro/ecorp-nodejs-demo/actions/workflows/pkg.yml)
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/devprofr/ecorp-nodejsdemo-api?label=Docker)](https://hub.docker.com/r/devprofr/ecorp-nodejsdemo-api)
+
 ## Local development
 
 * Runs RabbitMQ in a container and check cluster status
