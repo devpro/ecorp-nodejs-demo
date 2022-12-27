@@ -24,7 +24,11 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.json({ 'message': 'ok' });
-})
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).send('Ok');
+});
 
 const msg = 'Hello World!';
 app.get('/send', async (req, res) => {
@@ -39,12 +43,12 @@ app.get('/send', async (req, res) => {
     console.log(Buffer.from(data.content).toString());
   });
 
-  res.status(202).json({ "status": "ok" });
+  res.status(202).json({ "status": "message sent" });
 });
 
 const server = app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
-})
+});
 
 process.on('SIGTERM', shutDown);
 process.on('SIGINT', shutDown);
